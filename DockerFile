@@ -60,7 +60,7 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 	&& mv android-sdk-linux /usr/local/android-sdk \
 	&& rm android-sdk_r24.4.1-linux.tgz \
 	&& echo y | /usr/local/android-sdk/tools/android update sdk --filter "${ANDROID_COMPONENTS}" --no-ui -a\ 
- 	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
+ 	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME  \
 	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME  \
 	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
 	&& echo "sdk.dir=$ANDROID_HOME" > local.properties &&  unset ANDROID_NDK_HOME \
