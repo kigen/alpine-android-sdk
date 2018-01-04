@@ -78,11 +78,11 @@ RUN apk update \
 	#&& unzip android-ndk-r12-linux-x86_64.zip \
 	#&& mv android-ndk-r12 /usr/local/android-ndk \
 	#&& rm android-ndk-r12-linux-x86_64.zip \
-	&& id $RUN_USER || adduser --uid "$RUN_UID" \
-		--gecos 'Build User' \
-		--shell '/bin/sh' \
-		--disabled-login \
-		--disabled-password "$RUN_USER" \
+	&& id $RUN_USER || adduser -u "$RUN_UID" \
+		-g 'Build User' \
+		-s '/bin/sh' \
+		-S \
+		-D "$RUN_USER" \
 	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
