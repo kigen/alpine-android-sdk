@@ -70,8 +70,9 @@ RUN wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
 
 RUN chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
-	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
-	&& echo "sdk.dir=$ANDROID_HOME" > local.properties &&  unset ANDROID_NDK_HOME \
+	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT 
+	
+RUN  echo "sdk.dir=$ANDROID_HOME" > local.properties &&  unset ANDROID_NDK_HOME \
 	&& echo y | android update sdk --filter "extra-android-m2repository" --no-ui -a 
 
 RUN mkdir "${ANDROID_HOME}/licenses" || true \
