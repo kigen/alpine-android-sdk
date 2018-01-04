@@ -50,15 +50,13 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 		-s '/bin/sh' \
 		-S \
 		-D "$RUN_USER" \
-		-G "$RUN_USER"
-	
-RUN apk update \                                                                                                                                                                                                                                                                                                                                                                                                                          
+		-G "$RUN_USER" \ 
+	&& apk update \                                                                                                                                                                                                                                                                                                                                                                                                                          
 	&& set -x \
 	&& apk add --no-cache \
 		ca-certificates wget \
-	&& update-ca-certificates 
-	
-RUN wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
+	&& update-ca-certificates \
+	&& wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
 	&& tar -xvzf android-sdk_r24.4.1-linux.tgz \
 	&& mv android-sdk-linux /usr/local/android-sdk \
 	&& rm android-sdk_r24.4.1-linux.tgz \
@@ -66,16 +64,13 @@ RUN wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
 	&& wget http://dl.google.com/android/repository/android-ndk-r12-linux-x86_64.zip \
 	&& unzip android-ndk-r12-linux-x86_64.zip \
 	&& mv android-ndk-r12 /usr/local/android-ndk \
-	&& rm android-ndk-r12-linux-x86_64.zip 
-
-RUN chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
+	&& rm android-ndk-r12-linux-x86_64.zip \
+ 	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
-	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT 
-
-RUN  echo "sdk.dir=$ANDROID_HOME" > local.properties &&  unset ANDROID_NDK_HOME \
-	&& echo y | android update sdk --filter "extra-android-m2repository" --no-ui -a 
-
-RUN mkdir "${ANDROID_HOME}/licenses" || true \
+	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
+	&& echo "sdk.dir=$ANDROID_HOME" > local.properties &&  unset ANDROID_NDK_HOME \
+	&& echo y | android update sdk --filter "extra-android-m2repository" --no-ui -a\ 
+	&& mkdir "${ANDROID_HOME}/licenses" || true \
 	&& echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "${ANDROID_HOME}/licenses/android-sdk-license" \
 	&& echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "${ANDROID_HOME}/licenses/android-sdk-license"
 
