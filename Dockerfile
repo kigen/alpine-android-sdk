@@ -30,7 +30,6 @@ ENV PATH $PATH:$ANDROID_SDK_HOME/tools
 ENV PATH $PATH:$ANDROID_SDK_HOME/platform-tools
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/23.0.2
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/24.0.0
-ENV PATH $PATH:$ANDROID_NDK_HOME
 
 # Support Gradle
 ENV TERM dumb
@@ -61,12 +60,8 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 	&& mv android-sdk-linux /usr/local/android-sdk \
 	&& rm android-sdk_r24.4.1-linux.tgz \
 	&& echo y | /usr/local/android-sdk/tools/android update sdk --filter "${ANDROID_COMPONENTS}" --no-ui -a\ 
-	&& wget http://dl.google.com/android/repository/android-ndk-r12-linux-x86_64.zip \
-	&& unzip android-ndk-r12-linux-x86_64.zip \
-	&& mv android-ndk-r12 /usr/local/android-ndk \
-	&& rm android-ndk-r12-linux-x86_64.zip \
  	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
-	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
+	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME  \
 	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
 	&& echo "sdk.dir=$ANDROID_HOME" > local.properties &&  unset ANDROID_NDK_HOME \
 	&& echo y | android update sdk --filter "extra-android-m2repository" --no-ui -a\ 
