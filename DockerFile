@@ -83,7 +83,7 @@ RUN apk update \
 		-g 'Build User' \
 		-s '/bin/sh' \
 		-S \
-		-D "$RUN_USER" \
+		-D "$RUN_USER" "$RUN_USER"\
 	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
