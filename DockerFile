@@ -1,6 +1,19 @@
 # Android Dockerfile
+FROM alpine:3.6
 
-FROM alpine:latest
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="alpine-android-sdk" \
+      org.label-schema.description="Android SDK Image based on Alpine distro" \
+      org.label-schema.url="https://www.254bit.com/" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/kigen/alpine-android-sdk" \
+      org.label-schema.vendor="254Bit" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.schema-version="0.1.0"
 
 # Sets language to UTF8 : this works in pretty much all cases
 ENV LANG en_US.UTF-8
@@ -49,22 +62,22 @@ ENV RUN_UID 5089
 
 ENV PROJECT /project
 
-RUN apk update \                                                                                                                                                                                                                        
-    &&   apk add ca-certificates wget \                                                                                                                                                                                                      
-    &&   update-ca-certificates \   
-	&&  set -x \
-	&&  apk add --no-cache \
+RUN apk update \                                                                                                                                                                                                                                                                                                                                                                                                                          
+	&& set -x \
+	&& apk add --no-cache \
 		openjdk8="$JAVA_ALPINE_VERSION" \
+		ca-certificates wget \
 	&& [ "$JAVA_HOME" = "$(docker-java-home)" ] \
+	&& update-ca-certificates \   
 	&& wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
 	&& tar -xvzf android-sdk_r24.4.1-linux.tgz \
 	&& mv android-sdk-linux /usr/local/android-sdk \
 	&& rm android-sdk_r24.4.1-linux.tgz \
 	&& echo y | /usr/local/android-sdk/tools/android update sdk --filter "${ANDROID_COMPONENTS}" --no-ui -a \
-	&& wget http://dl.google.com/android/repository/android-ndk-r12-linux-x86_64.zip \
-	&& unzip android-ndk-r12-linux-x86_64.zip \
-	&& mv android-ndk-r12 /usr/local/android-ndk \
-	&& rm android-ndk-r12-linux-x86_64.zip \
+	#&& wget http://dl.google.com/android/repository/android-ndk-r12-linux-x86_64.zip \
+	#&& unzip android-ndk-r12-linux-x86_64.zip \
+	#&& mv android-ndk-r12 /usr/local/android-ndk \
+	#&& rm android-ndk-r12-linux-x86_64.zip \
 	&& id $RUN_USER || adduser --uid "$RUN_UID" \
 		--gecos 'Build User' \
 		--shell '/bin/sh' \
