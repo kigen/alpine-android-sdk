@@ -1,5 +1,5 @@
 # Android Dockerfile
-FROM alpine:3.6
+FROM anapsix/alpine-java
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
@@ -18,22 +18,6 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 # Sets language to UTF8 : this works in pretty much all cases
 ENV LANG en_US.UTF-8
 
-# add a simple script that can auto-detect the appropriate JAVA_HOME value
-# based on whether the JDK or only the JRE is installed
-RUN { \
-		echo '#!/bin/sh'; \
-		echo 'set -e'; \
-		echo; \
-		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
-	} > /usr/local/bin/docker-java-home \
-	&& chmod +x /usr/local/bin/docker-java-home
-
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
-ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
-
-ENV JAVA_VERSION 8u131
-ENV JAVA_ALPINE_VERSION 8.131.11-r2
-
 ENV ANDROID_COMPONENTS platform-tools,android-23,build-tools-23.0.2,build-tools-24.0.0
 
 # Environment variables
@@ -47,9 +31,6 @@ ENV PATH $PATH:$ANDROID_SDK_HOME/platform-tools
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/23.0.2
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/24.0.0
 ENV PATH $PATH:$ANDROID_NDK_HOME
-
-# Export JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 
 # Support Gradle
 ENV TERM dumb
@@ -74,9 +55,7 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 RUN apk update \                                                                                                                                                                                                                                                                                                                                                                                                                          
 	&& set -x \
 	&& apk add --no-cache \
-		openjdk8="$JAVA_ALPINE_VERSION" \
 		ca-certificates wget \
-	&& [ "$JAVA_HOME" = "$(docker-java-home)" ] \
 	&& update-ca-certificates 
 	
 RUN wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
