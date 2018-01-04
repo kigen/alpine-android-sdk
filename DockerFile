@@ -59,9 +59,18 @@ ENV GRADLE_OPTS "-XX:+UseG1GC -XX:MaxGCPauseMillis=1000"
 # Add build user account, values are set to default below
 ENV RUN_USER mobileci
 ENV RUN_UID 5089
+ENV GROUP_ID 1900
 
 ENV PROJECT /project
 
+RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
+	&& id $RUN_USER || adduser -u "$RUN_UID" \
+		-g 'Build User' \
+		-s '/bin/sh' \
+		-S \
+		-D "$RUN_USER" \
+		-G "$RUN_USER"
+	
 RUN apk update \                                                                                                                                                                                                                                                                                                                                                                                                                          
 	&& set -x \
 	&& apk add --no-cache \
@@ -78,13 +87,6 @@ RUN apk update \
 	#&& unzip android-ndk-r12-linux-x86_64.zip \
 	#&& mv android-ndk-r12 /usr/local/android-ndk \
 	#&& rm android-ndk-r12-linux-x86_64.zip \
-	&& addgroup -g 1900 "$RUN_USER" \
-	&& id $RUN_USER || adduser -u "$RUN_UID" \
-		-g 'Build User' \
-		-s '/bin/sh' \
-		-S \
-		-D "$RUN_USER" \
-		-G "$RUN_USER"\
 	&& chown -R $RUN_USER:$RUN_USER $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME \
 	&& mkdir $PROJECT && chown -R $RUN_USER:$RUN_USER $PROJECT \
