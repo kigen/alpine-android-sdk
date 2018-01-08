@@ -1,5 +1,5 @@
 # Android Dockerfile
-FROM anapsix/alpine-java
+FROM anapsix/alpine-java:8_jdk
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
