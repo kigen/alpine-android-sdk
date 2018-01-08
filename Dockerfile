@@ -1,5 +1,5 @@
 # Android Dockerfile
-FROM anapsix/alpine-java:8_jdk
+FROM alpine:3.6
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
@@ -17,6 +17,20 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 # Sets language to UTF8 : this works in pretty much all cases
 ENV LANG en_US.UTF-8
+
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
+	
+ENV JAVA_HOME /usr/lib/jvm/java-1.7-openjdk
+ENV PATH $PATH:/usr/lib/jvm/java-1.7-openjdk/jre/bin:/usr/lib/jvm/java-1.7-openjdk/bin
+
+ENV JAVA_VERSION 7u131
+ENV JAVA_ALPINE_VERSION 7.131.2.6.9-r1
 
 ENV ANDROID_COMPONENTS platform-tools,android-23,build-tools-23.0.2,build-tools-24.0.0
 
@@ -42,6 +56,11 @@ ENV RUN_UID 5089
 ENV GROUP_ID 1900
 
 ENV PROJECT /project
+
+RUN set -x \
+	&& apk add --no-cache \
+		openjdk7="$JAVA_ALPINE_VERSION" \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
 
 RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 	&& id $RUN_USER || adduser -u "$RUN_UID" \
