@@ -57,10 +57,6 @@ ENV GROUP_ID 1900
 
 ENV PROJECT /project
 
-RUN set -x \
-	&& apk add --no-cache \
-		openjdk7="$JAVA_ALPINE_VERSION" \
-	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
 
 RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 	&& id $RUN_USER || adduser -u "$RUN_UID" \
@@ -71,6 +67,9 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 		-G "$RUN_USER" \ 
 	&& apk update \                                                                                                                                                                                                                                                                                                                                                                                                                          
 	&& set -x \
+	&& apk add --no-cache \
+		openjdk7="$JAVA_ALPINE_VERSION" \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ] \
 	&& apk add --no-cache \
 		ca-certificates wget \
 	&& update-ca-certificates \
