@@ -88,3 +88,5 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 	&& echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "${ANDROID_HOME}/licenses/android-sdk-license"
 
 WORKDIR $PROJECT
+
+USER ${RUN_USER}
