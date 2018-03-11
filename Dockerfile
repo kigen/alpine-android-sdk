@@ -71,7 +71,7 @@ RUN	addgroup -g "${GROUP_ID}" "${RUN_USER}" \
 		openjdk7="$JAVA_ALPINE_VERSION" \
 	&& [ "$JAVA_HOME" = "$(docker-java-home)" ] \
 	&& apk add --no-cache \
-		ca-certificates wget \
+		ca-certificates wget curl \
 	&& update-ca-certificates \
 	&& wget https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz \
 	&& tar -xvzf android-sdk_r24.4.1-linux.tgz \
